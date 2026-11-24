@@ -1,4 +1,4 @@
-# 🌬️ WindOps 360
+# WindOps 360
 
 **Inteligência para manutenção e performance de parques eólicos.**
 
