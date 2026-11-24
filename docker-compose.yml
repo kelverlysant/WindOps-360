@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-windops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-windops}
+      POSTGRES_DB: ${POSTGRES_DB:-windops}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-windops} -d ${POSTGRES_DB:-windops}"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-windops}:${POSTGRES_PASSWORD:-windops}@db:5432/${POSTGRES_DB:-windops}
+      ENERGY_PRICE_BRL_PER_MWH: ${ENERGY_PRICE_BRL_PER_MWH:-250}
+    # Apply migrations, load demo data if the database is empty, then serve
+    command: sh -c "alembic upgrade head && python -m windops.db.seed && uvicorn windops.api.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  dashboard:
+    build: .
+    environment:
+      API_URL: http://api:8000
+      ENERGY_PRICE_BRL_PER_MWH: ${ENERGY_PRICE_BRL_PER_MWH:-250}
+    command: streamlit run windops/dashboard/app.py --server.address 0.0.0.0 --server.port 8501 --server.headless true
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:

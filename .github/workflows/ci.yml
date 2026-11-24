@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: windops
+          POSTGRES_PASSWORD: windops
+          POSTGRES_DB: windops
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U windops" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://windops:windops@localhost:5432/windops
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: pytest -q
+      - name: Migrations and seed run on PostgreSQL
+        run: |
+          alembic upgrade head
+          alembic check
+          python -m windops.db.seed

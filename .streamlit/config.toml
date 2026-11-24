@@ -1,0 +1,57 @@
+[server]
+enableStaticServing = true
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#0E7C9A"
+backgroundColor = "#EEF3F6"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#14303F"
+linkColor = "#0E7C9A"
+borderColor = "#D5E0E6"
+font = "Barlow, system-ui, sans-serif"
+headingFont = "Barlow Semi Condensed, Barlow, system-ui, sans-serif"
+headingFontWeights = [600, 600, 600, 600, 500, 500]
+baseRadius = "0.375rem"
+showWidgetBorder = true
+dataframeHeaderBackgroundColor = "#F6F9FA"
+chartCategoricalColors = ["#0E7C9A", "#14303F", "#D99A1E", "#7FB3C6", "#C8362B"]
+
+[[theme.fontFaces]]
+family = "Barlow"
+url = "app/static/fonts/barlow-latin-400-normal.woff2"
+weight = "400"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Barlow"
+url = "app/static/fonts/barlow-latin-500-normal.woff2"
+weight = "500"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Barlow"
+url = "app/static/fonts/barlow-latin-600-normal.woff2"
+weight = "600"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Barlow Semi Condensed"
+url = "app/static/fonts/barlow-semi-condensed-latin-500-normal.woff2"
+weight = "500"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Barlow Semi Condensed"
+url = "app/static/fonts/barlow-semi-condensed-latin-600-normal.woff2"
+weight = "600"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Barlow Semi Condensed"
+url = "app/static/fonts/barlow-semi-condensed-latin-700-normal.woff2"
+weight = "700"
+style = "normal"
